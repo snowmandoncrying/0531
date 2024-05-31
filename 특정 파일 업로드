@@ -24,6 +24,82 @@ if(mf.getContentType().split("/")[0].equals("image")) {
 콘텐츠 타입이 여러 번 사용될 때엔 일반 코드처럼 변수를 선언해서 쓰는 것이 좋다.
   >> 최적화 코드라고 무조건 좋은 것이 아님. 상황에 맞게 써야 함.
 
-  FileController.java / FileUploadService.java / form.html / uploadPro.html
+ 1. FileController.java / 2. FileUploadService.java / 3. form.html / 4. uploadPro.html
 
+1.
+package com.ex.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+@Controller
+public class FileController {
+	
+	@GetMapping("/file/form")
+	public String form() {
+		return "file/form";
+	}
+	
+	@PostMapping("/file/uploadPro")
+	public String uploadPro(@RequestParam("name")String name,
+				@RequestParam("save") MultipartFile mf,
+				Model model) {
+		String fileName = fileUploadService.imageFileUpload(mf);
+		model.addAttribute("fileName",fileName);
+		return "file/uploadPro";
+		
+	}
+}
+----------------------
+2.
+
+package com.ex.service;
+
+import java.io.File;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+public class FileUploadService {
+
+	// 이미지 파일만 업로드 가능하도록 (특정 파일만)
+	public String imageFileUpload(MultipartFile mf) {
+		
+		String fileName = mf.getOriginalFilename();
+		if(mf != null && !fileName.equals("")) {
+			if(mf.getContentType().split("/")[0].equals("image")) {
+			
+				String path = "C:\\spring\\upload\\";
+				fileName = UUID.randomUUID().toString().replace("-","") + fileName;
+			
+				File copy = new File(path+fileName);	
+				try {
+					mf.transferTo(copy);
+				}catch(Exception e) {
+					e.printStackTrace();
+					}	
+			}
+		}
+	return fileName;
+	}
+}
+---------------
+3.
+<h1>form.html</h1>
+<form action="/file/uploadPro"
+	method="post" enctype="multipart/form-data">
+	이름 : <input type="text" name="name"/><br />
+	파일 : <input type="file" name="save"/><br />
+	 <input type="submit" name="업로드"/><br />
+</form>
+---------------
+4.
+<h1>업로드 완료~~</h1>
+<img th:src="'/file/display?filename='+${fileName}" />
 
