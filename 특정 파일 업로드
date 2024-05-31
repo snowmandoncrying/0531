@@ -7,11 +7,22 @@
   자른 결과값이([0] 0번째 인덱스)
   image 혹은 text와 같은지 (equals) 를 확인하면 된다.
   true일 경우 upload가 가능하게 만들어주면 됨!
-  
 
 
+String ct = mf.getContentType();
+String [] str = ct.split("/");
+String type = str[0];
+if(type.equals("image")) {
+ }
+	>> 일반 코드
 
+if(mf.getContentType().split("/")[0].equals("image")) {
+ }	
+	>> 최적화 코드
 
+위와 아래 코드는 같은 의미인데 일반 / 최적화 코드로 나뉜다.
+콘텐츠 타입이 여러 번 사용될 때엔 일반 코드처럼 변수를 선언해서 쓰는 것이 좋다.
+  >> 최적화 코드라고 무조건 좋은 것이 아님. 상황에 맞게 써야 함.
 
   FileController.java / FileUploadService.java / form.html / uploadPro.html
 
