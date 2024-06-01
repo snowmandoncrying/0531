@@ -1,9 +1,14 @@
 
-File copy = new File(path + fileName);
+File copy = new File(path + fileName);  // path와 fileName을 합쳐서 새로운 파일 경로를 만들고 File 객체를 생성
+                                        // 이 객체는 파일이 저장될 위치와 이름을 나타냄
   try{
-    mf.transferTo(copy);  
-  }catch (Exception e) {
+    mf.transferTo(copy);    // transferTo 메서드가 예외를 발생시키는 메서드이기 때문에 예외처리를 해주고 호출하면 된다.
+                            // mf - 업로드된 파일을 나타내는 객체(MultipartFile)임
+                            // transferTo 메서드를 사용하여 업로드된 파일을 copy로 지정된 경로에 저장
+                            // 즉, 업로드된 파일을 서버의 지정된 위치에 복사(저장)하는 것이다.
+  }catch (Exception e) {  
     e.printStackTrace();
   }
 
 ------------------------
+
